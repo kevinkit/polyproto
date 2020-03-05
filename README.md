@@ -56,7 +56,6 @@ x = Dense(1024, activation='relu')(x)
 
 # use the gens.forms member variable to adapt it accordingly 
 predictions = Dense(gen.forms, activation='softmax')(x)
-odel = Model(inputs=base_model.input, outputs=predictions)
 model = Model(inputs=base_model.input, outputs=predictions)
 model.compile(optimizer='adam', loss='categorical_crossentropy',metrics=["acc"])
 hist = model.fit_generator(gen,validation_data=val_gen,epochs=20)            
