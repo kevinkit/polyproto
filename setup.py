@@ -8,7 +8,7 @@ setup(
   author = 'kevin',
   author_email = 'derkleinehof@gmail.com',
   url = 'https://github.com/kevinkit/polyproto',   
-  download_url = 'https://github.com/user/reponame/archive/v_01.tar.gz',    # I explain this later on
+  download_url = 'https://github.com/kevinkit/polyproto/archive/v_01.tar.gz',    # I explain this later on
   keywords = ['testing', 'keras', 'tensorflow','CNN'],
   install_requires=[            # I get to this in a second
           'keras',
