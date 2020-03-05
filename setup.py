@@ -6,7 +6,7 @@ setup(
   license='MIT',
   description = 'generator using polygons for testing a Keras CNN',
   author = 'kevin',
-  author_email = 'derkleinehof@gmail.com',
+  author_email = 'wiederkleinehof@gmail.com',
   url = 'https://github.com/kevinkit/polyproto',   
   download_url = 'https://github.com/kevinkit/polyproto/archive/v_01.tar.gz',    # I explain this later on
   keywords = ['testing', 'keras', 'tensorflow','CNN'],
