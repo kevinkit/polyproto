@@ -6,7 +6,7 @@ Created on Thu Mar  5 11:48:41 2020
 """
 
 
-from drawFunctions import drawRandomCircle,drawRandomLine,drawRandomEllipse,drawRandomRectangle,drawRandomPolygon
+from polyproto.drawFunctions import drawRandomCircle,drawRandomLine,drawRandomEllipse,drawRandomRectangle,drawRandomPolygon
 import numpy as np
 import tensorflow as tf
 
