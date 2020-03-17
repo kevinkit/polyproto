@@ -14,6 +14,11 @@ if int(tf.__version__.split(".")[0])  >= 2:
     from keras.utils import to_categorical, Sequence
 else:
     from keras.utils import to_categorical, Sequence
+
+if int(tf.__version__.split(".")[0])  >= 2:
+    from keras.utils import to_categorical, Sequence
+else:
+    from keras.utils import to_categorical, Sequence
 class GeometricGenerator(Sequence):      
     
     def __init__(self,
@@ -27,7 +32,8 @@ class GeometricGenerator(Sequence):
                  list_of_form_creators=[drawRandomCircle,
                                         drawRandomLine,
                                         drawRandomRectangle,
-                                        drawRandomEllipse]):
+                                        drawRandomEllipse],
+                 difficulty=0.8):
         """
             @brief This is a simple generator for creating common geometric shapes 
             @param width image width
@@ -40,12 +46,15 @@ class GeometricGenerator(Sequence):
             @param max_background_noise A random background will be used, this describes the maxmium
             @param list_of_form_creators here you can give in a list of functions that will be called
             to create a form
+            @param difficulty Will set a percentage of the image to black
         """        
         
         self.image_size = (width,height)
         self.width = width
         self.height = height
         self.channels = channels
+        self.image_flat_size = width*height
+        self.blacks = int(difficulty * width * height)
         self.epoch_length = epoch_length
         
         if forms > len(list_of_form_creators):
@@ -54,6 +63,7 @@ class GeometricGenerator(Sequence):
         self.list_of_form_creators = list_of_form_creators
         self.max_background_noise = max_background_noise
         self.batch_mul = batch_mul
+        self.difficulty = difficulty
     def __len__(self):
         # here we can just say whatever we find fitting for one epoch
         return self.epoch_length
@@ -70,7 +80,15 @@ class GeometricGenerator(Sequence):
         cnt = 0
         for i in range(self.batch_mul):
             for j in range(self.forms):
-                X[cnt] = self.list_of_form_creators[j](X[cnt])
+                tmp_image = self.list_of_form_creators[j](X[cnt]) 
+                #get random black coordaintes
+                x_random = np.random.randint(0,tmp_image.shape[0],size=self.blacks)
+                y_random = np.random.randint(0,tmp_image.shape[0],size=self.blacks)
+                for x,y in zip(x_random,y_random):
+                    tmp_image[x,y,:] = 0
+                
+                X[cnt] = tmp_image
+                
                 Y[cnt] = j
                 cnt += 1
              
@@ -95,7 +113,8 @@ class GeometricNGenerator(Sequence):
                  maximum_vertices=20,
                  pts=None,
                  seed=3121991,
-                 max_background_noise=128):
+                 max_background_noise=128,
+                 difficulty=0.8):
         """
             @brief This is a simple generator for creating polygons        
             @param width image width
@@ -109,6 +128,7 @@ class GeometricNGenerator(Sequence):
             @param pts to create polygons from. Set to None if not used
             @param seed seed for numpy to make reproducible experiments
             @param max_background_noise A random background will be used, this describes the maxmium
+            @param difficulty Will set a percentage of the image to black
         """        
         np.random.seed(seed)
         # will use random then
@@ -137,7 +157,8 @@ class GeometricNGenerator(Sequence):
         self.epoch_length = epoch_length
         self.max_background_noise = max_background_noise
         self.batch_mul = batch_mul
-    
+        self.image_flat_size = width*height
+        self.blacks = int(difficulty * width * height)    
     def __len__(self):
         # here we can just say whatever we find fitting for one epoch
         return self.epoch_length
@@ -155,7 +176,14 @@ class GeometricNGenerator(Sequence):
         for i in range(self.batch_mul):
             for j in range(self.forms):
                 
-                X[cnt] = drawRandomPolygon(X[cnt],self.random_pts[j])
+                tmp_image = drawRandomPolygon(X[cnt],self.random_pts[j])
+                x_random = np.random.randint(0,tmp_image.shape[0],size=self.blacks)
+                y_random = np.random.randint(0,tmp_image.shape[0],size=self.blacks)
+                for x,y in zip(x_random,y_random):
+                    tmp_image[x,y,:] = 0
+                
+                X[cnt] = tmp_image
+
                 Y[cnt] = j
                 cnt += 1
              
